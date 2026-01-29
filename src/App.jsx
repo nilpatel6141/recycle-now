@@ -3,7 +3,7 @@ import MapView from "./components/MapView"
 import WasteSelector from "./components/WasteSelector"
 import WasteAIHelper from "./components/WasteAIHelper"
 import BinList from "./components/BinList"
-import publicBins from "./data/publicBins.js"
+import publicBins from "./data/bins.js"
 import getDistanceKm from "./utils/distance.js"
 
 const App = () => {

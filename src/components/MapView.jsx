@@ -15,34 +15,23 @@ const MapView = ({ userLocation, bins }) => {
       attribution: "© OpenStreetMap contributors",
     }).addTo(map)
 
-    // User marker
     L.marker([userLocation.lat, userLocation.lng])
       .addTo(map)
       .bindPopup("You are here")
       .openPopup()
 
-    // Bin markers
     bins.forEach((bin) => {
       L.marker([bin.lat, bin.lng])
         .addTo(map)
         .bindPopup(
-          `<strong>${bin.name}</strong><br/>${bin.type} • ${bin.distance.toFixed(
-            2
-          )} km`
+          `<strong>${bin.name}</strong><br/>${bin.type} • ${bin.distance.toFixed(2)} km`
         )
     })
 
-    return () => {
-      map.remove()
-    }
+    return () => map.remove()
   }, [userLocation, bins])
 
-  return (
-    <div
-      id="map"
-      className="w-full h-full"
-    />
-  )
+  return <div id="map" className="w-full h-full" />
 }
 
 export default MapView
