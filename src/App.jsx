@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import MapView from "./components/MapView"
 import WasteSelector from "./components/WasteSelector"
 import WasteAIHelper from "./components/WasteAIHelper"
 import BinList from "./components/BinList"
-import publicBins from "./data/bins.js";
+import publicBins from "./data/publicBins.js"
 import getDistanceKm from "./utils/distance.js"
 
 const App = () => {
@@ -11,17 +11,17 @@ const App = () => {
   const [waste, setWaste] = useState("")
   const [radius, setRadius] = useState(5)
 
-  useEffect(() => {
+  const requestLocation = () => {
     navigator.geolocation.getCurrentPosition(
       (pos) =>
         setLocation({
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
         }),
-      () => alert("Please allow location access"),
+      () => alert("Location access is required"),
       { enableHighAccuracy: true }
     )
-  }, [])
+  }
 
   const nearbyBins = useMemo(() => {
     if (!location) return []
@@ -48,24 +48,24 @@ const App = () => {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-8 py-10 space-y-10">
+      <main className="max-w-7xl mx-auto px-8 py-10 space-y-8">
 
-        <section>
-          <h2 className="text-3xl font-semibold">
-            Find nearby public recycling bins
-          </h2>
-          <p className="mt-2 text-slate-600">
-            Based on your current location in Rajkot
-          </p>
-        </section>
+        {!location && (
+          <button
+            onClick={requestLocation}
+            className="px-6 py-3 bg-emerald-600 text-white rounded-lg"
+          >
+            Use my current location
+          </button>
+        )}
 
-        <section className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-8">
           <aside className="bg-white border rounded-xl p-6 space-y-6">
             <WasteSelector value={waste} onChange={setWaste} />
 
             <div>
               <label className="text-sm text-slate-600">
-                Search radius: {radius} km
+                Radius: {radius} km
               </label>
               <input
                 type="range"
@@ -83,7 +83,7 @@ const App = () => {
           <div className="bg-white border rounded-xl overflow-hidden h-[70vh]">
             <MapView userLocation={location} bins={nearbyBins} />
           </div>
-        </section>
+        </div>
 
         <section className="bg-white border rounded-xl p-6">
           <h3 className="font-semibold mb-4">
@@ -93,13 +93,6 @@ const App = () => {
         </section>
 
       </main>
-
-      <footer className="border-t mt-16">
-        <div className="max-w-7xl mx-auto px-8 py-6 text-sm text-slate-500">
-          © {new Date().getFullYear()} RecycleNow
-        </div>
-      </footer>
-
     </div>
   )
 }
